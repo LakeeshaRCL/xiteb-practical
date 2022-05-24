@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("deliveryAddress");
             $table->string("note");
             $table->string("deliveryTime");
+            $table->boolean("isQuotationCreated");
             // foreign key
             $table->foreignId("userID")
                 ->constrained("users")

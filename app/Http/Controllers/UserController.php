@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -31,7 +32,7 @@ class UserController extends Controller
 
                 $newUser->name = $userName;
                 $newUser->email = $userEmail;
-                $newUser->password = $userPassword;
+                $newUser->password = Hash::make($userPassword);
                 $newUser->contactNo = $userContactNo;
                 $newUser->dob = $userDOB;
 
@@ -69,7 +70,8 @@ class UserController extends Controller
         }
         else{
             // TODO: use hashing
-            if(strcmp($filteredUser->password,trim($userPassword))==0){
+            //strcmp($filteredUser->password,trim($userPassword))==0
+            if(Hash::check($filteredUser->password,$userPassword)){
                 $request->session()->forget('loggedUser');
                 $request->session()->put('loggedUser',$filteredUser->id);
                 Log::info("Requested user name : ".$filteredUser->name. "ID :".$filteredUser->id);
