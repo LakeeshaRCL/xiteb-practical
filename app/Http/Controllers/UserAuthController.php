@@ -16,13 +16,14 @@ class UserAuthController extends Controller
     function register(){
         return view('auth.userRegister');
     }
-    
+
       /**
      * A method to logout the user
      */
     function logout() {
         if(session()->has("loggedUser")){
             session()->pull("loggedUser");
+            session()->flush();
             return redirect("/userAuth/login");
         }
     }

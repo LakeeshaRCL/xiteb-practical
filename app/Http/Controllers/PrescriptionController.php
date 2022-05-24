@@ -27,7 +27,7 @@ class PrescriptionController extends Controller
         $note = $request-> note;
         $deliveryAddress = $request->deliveryAddress;
         $deliveryTime = $request->deliveryTime;
-        
+
         try{
             $newPrescription = new Prescription();
 
@@ -36,9 +36,9 @@ class PrescriptionController extends Controller
             $newPrescription->deliveryTime = $deliveryTime;
             $newPrescription->userID = $userID;
 
-            // save prescription 
+            // save prescription
             $isSaved = $newPrescription->save();
-           
+
             if($isSaved){
                 // save images to db
                 $imgFiles = $request->file('image');
@@ -65,7 +65,7 @@ class PrescriptionController extends Controller
                 }
             }
             else {
-                return redirect('/user/dashboard')->with('feedbackMsg',"Sorry! Prscription was not uploaded. Try again.");
+                return redirect('/user/dashboard')->with('feedbackMsg',"Sorry! Prescription was not uploaded. Try again.");
             }
         }
         catch(Exception $e){
@@ -75,5 +75,14 @@ class PrescriptionController extends Controller
         return redirect('/user/dashboard')->with('feedbackMsg',"Your prescription has been uploaded.");
 
         //  dd($request->file('image'));
+    }
+
+    /**
+     * A method to view all prescriptions
+     */
+    function getAll() {
+        $prescriptions = Prescription::latest()->get();
+        return view('prescriptions.index',data:['prescriptions'=>$prescriptions]);
+//        return $prescriptions;
     }
 }

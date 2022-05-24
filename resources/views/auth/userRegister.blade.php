@@ -17,7 +17,7 @@
                 <label for="conPassword">Confirm Password</label><br>
                 <input type="password" name="userConfirmPassword" required><br><br>
 
-                <button type="submit">Sign Up</button><br><br>
+                <button type="submit" class="action-btn-accept">Sign Up</button><br><br>
                 <a href="{{route("userAuth.login")}}">Already have an account? Let's login!</a>
 
                 <br><br>

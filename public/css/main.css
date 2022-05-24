@@ -399,3 +399,31 @@ video {
     font-size: larger;
     background-color: #426ec7;
 }
+
+table, th, td {
+    border:1px solid black;
+    padding: 15px 15px;
+}
+.item-table{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.prescription-images{
+    white-space: nowrap;
+}
+
+.action-btn-info,.action-btn-accept,.action-btn-reject{
+    width: 150px;
+    height: 40px;
+    font-size: 11pt;
+}
+.action-btn-info{
+    background-color: lightskyblue;
+}
+.action-btn-accept{
+    background-color: green;
+}
+.action-btn-reject{
+    background-color: orangered;
+}

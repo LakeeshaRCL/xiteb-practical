@@ -4,6 +4,12 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    /**
+     * Image upload path
+     *
+     */
+    'fileUploadPath' =>'uploads/',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

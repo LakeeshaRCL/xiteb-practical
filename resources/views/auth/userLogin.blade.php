@@ -9,10 +9,16 @@
                 <label for="password">Password</label><br>
                 <input type="password" name="userPassword" required><br><br>
 
-                <button type="submit">Login</button><br><br>
+                <button type="submit" class="action-btn-accept">Login</button><br><br>
                 <a href="{{route("userAuth.register")}}">New to the system? Let's create a new account!</a>
 
                 <br><br>
+
+                <div class="componetArea">
+                    <button class="componet-btn"><a href="/">Goto Main Menu</a></button>
+                </div>
+
+                <br>
                 <p class="message">{{session('feedbackMsg')}}</p>
             </form>
         </div>

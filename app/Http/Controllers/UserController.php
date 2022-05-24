@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
         else{
             try{
                 $newUser = new User();
-            
+
                 $newUser->name = $userName;
                 $newUser->email = $userEmail;
                 $newUser->password = $userPassword;
@@ -47,9 +48,9 @@ class UserController extends Controller
             catch(Exception){
                 return redirect('/userAuth/register')->with('feedbackMsg','Sorry! Try again.');
             }
-           
+
         }
-         
+
     }
 
     /**
@@ -62,14 +63,16 @@ class UserController extends Controller
 
         $filteredUser = User::where('email',trim($userEmail))->first();
 
+
         if($filteredUser == null){
             return back()->with("feedbackMsg","Invalid user name");
         }
         else{
-            // TODO: use hasing
+            // TODO: use hashing
             if(strcmp($filteredUser->password,trim($userPassword))==0){
-             
+                $request->session()->forget('loggedUser');
                 $request->session()->put('loggedUser',$filteredUser->id);
+                Log::info("Requested user name : ".$filteredUser->name. "ID :".$filteredUser->id);
                 return redirect('/user/dashboard');
             }
             else{
@@ -82,8 +85,8 @@ class UserController extends Controller
      * A method to return the dashboard
      */
     function viewUserDashboard(){
-        $data = ['loggedUserData'=> User::findOrFail(session('loggedUser'))->first()];
+        $data = ['loggedUserData'=> User::findOrFail(session('loggedUser'))];
         return view('user.userDashboard',$data);
     }
 
-}   
+}

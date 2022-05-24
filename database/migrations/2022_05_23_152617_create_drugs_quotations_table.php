@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('drugs_quotations', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("drugID")->unsigned();
-            $table->bigInteger("prescriptionID")->unsigned();
+            $table->bigInteger("quotationID")->unsigned();
             $table->integer("quantity");
             $table->timestamps();
         });

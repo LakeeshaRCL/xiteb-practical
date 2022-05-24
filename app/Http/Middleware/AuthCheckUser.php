@@ -16,16 +16,16 @@ class AuthCheckUser
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {   
+    {
         Log::warning('Current path : '.$request->path());
         Log::info("LoggedUser : ".session()->has("loggedUser"));
- 
+
         if(!session()->has("loggedUser") && ($request->path() != 'userAuth/login' && $request->path() != 'userAuth/register')){
             return redirect('/userAuth/login')->with("feedbackMsg","You must be logged in");
         }
 
         if(session()->has("loggedUser") && ($request->path() == 'userAuth/login' || $request->path() == 'userAuth/register')){
-            return back();
+            return redirect('/user/dashboard');
         }
         return $next($request)  ->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
                                 ->header('Pragma','no-cache')
