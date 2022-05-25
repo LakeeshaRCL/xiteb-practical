@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PrescriptionController extends Controller
 {
-    // A method to creat new prescription
+    /*
+     * This method is used return prescription creation view to users
+     */
     function create($userID){
         return view('prescriptions.create',data:[
             'userID'=>$userID
@@ -20,69 +22,73 @@ class PrescriptionController extends Controller
     }
 
 
-    // A method to save a new prescription
+    /*
+     * This method is used save a new prescription
+     */
     function save(Request $request){
         //get values
         $userID = $request->userID;
         $note = $request-> note;
         $deliveryAddress = $request->deliveryAddress;
         $deliveryTime = $request->deliveryTime;
+        $imgFiles = $request->file('image');
 
-        try{
-            $newPrescription = new Prescription();
+        if(count($imgFiles)>5){
+            return redirect()->back()->with('feedbackMsg',"Please select maximum of five images");
+        }else{
+            try{
+                $newPrescription = new Prescription();
 
-            $newPrescription->deliveryAddress =$deliveryAddress;
-            $newPrescription->note = $note;
-            $newPrescription->deliveryTime = $deliveryTime;
-            $newPrescription->userID = $userID;
+                $newPrescription->deliveryAddress =$deliveryAddress;
+                $newPrescription->note = $note;
+                $newPrescription->deliveryTime = $deliveryTime;
+                $newPrescription->userID = $userID;
+                $newPrescription->isQuotationCreated = false; // initially no quotation
 
-            // save prescription
-            $isSaved = $newPrescription->save();
+                // save prescription
+                $isSaved = $newPrescription->save();
 
-            if($isSaved){
-                // save images to db
-                $imgFiles = $request->file('image');
-                Log::info("imgFiles length : ".strval(count($imgFiles)));
-                if($imgFiles){
-                    foreach ($imgFiles as $imgFile) {
-                        $newImgName = md5(rand(1000,100000));
-                        $extention = strtolower($imgFile->getClientOriginalExtension());
+                if($isSaved){
+                    // save images to db
 
-                        $newFullImgName = $newImgName.'.'.$extention;
-                        $targetPath = 'uploads/';
+                    Log::info("imgFiles length : ".strval(count($imgFiles)));
+                    if($imgFiles){
+                        foreach ($imgFiles as $imgFile) {
+                            $newImgName = md5(rand(1000,100000));
+                            $extention = strtolower($imgFile->getClientOriginalExtension());
 
-                        $newImgURL = $targetPath.$newFullImgName;
-                        $imgFile->move($targetPath,$newFullImgName);
+                            $newFullImgName = $newImgName.'.'.$extention;
+                            $targetPath = 'uploads/';
 
-                        // save each image
-                        $newImage = new Image();
+                            $newImgURL = $targetPath.$newFullImgName;
+                            $imgFile->move($targetPath,$newFullImgName);
 
-                        $newImage->name = $newFullImgName;
-                        $newImage->prescriptionID = $newPrescription->id;
+                            // save each image
+                            $newImage = new Image();
 
-                        $newImage->save();
+                            $newImage->name = $newFullImgName;
+                            $newImage->prescriptionID = $newPrescription->id;
+
+                            $newImage->save();
+                        }
                     }
+                    return redirect('/user/dashboard')->with('feedbackMsg',"Your prescription has been uploaded.");
+                }
+                else {
+                    return redirect('/user/dashboard')->with('feedbackMsg',"Sorry! Prescription was not uploaded. Try again.");
                 }
             }
-            else {
-                return redirect('/user/dashboard')->with('feedbackMsg',"Sorry! Prescription was not uploaded. Try again.");
+            catch(Exception $e){
+                Log::error("An error occurred in PrescriptionController, Save method : ".strval($e));
             }
         }
-        catch(Exception $e){
-            Log::error("An error occurred in PrescriptipnController, Save method : ".strval($e));
-        }
-
-        return redirect('/user/dashboard')->with('feedbackMsg',"Your prescription has been uploaded.");
-
-        //  dd($request->file('image'));
     }
 
     /**
-     * A method to view all prescriptions
+     * This method is used to view all prescriptions
      */
     function getAll() {
         $prescriptions = Prescription::latest()->get();
         return view('prescriptions.index',data:['prescriptions'=>$prescriptions]);
-//        return $prescriptions;
     }
 }

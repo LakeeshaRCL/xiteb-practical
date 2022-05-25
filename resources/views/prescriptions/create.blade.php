@@ -1,7 +1,7 @@
 @extends('layouts.baseLayout')
     @section('bodyContent')
         <div class="loginArea" style="text-align: center">
-            <h2>Create Prescription UID - {{$userID}}</h2>
+            <h2>Create Prescription</h2>
             <form action="{{route('prescription.save')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="userID" value="{{$userID}}">
@@ -20,9 +20,11 @@
                 </select><br><br>
                 <label for="images">Choose prescription images</label><br>
                 <input type="file" name="image[]" multiple required> <br>
-                
+
                 <button type="submit" class="componet-btn">Upload Prescription</button>
             </form>
+
+            <p class="message">{{session('feedbackMsg')}}</p>
             <br>
         </div>
         </div>

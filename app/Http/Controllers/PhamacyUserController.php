@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class PhamacyUserController extends Controller
 {
-    // A method to validate a pharmacy user
+    // This method is used to validate a pharmacy user
     function validateUser(Request $request)
     {
         // get values
@@ -33,7 +33,7 @@ class PhamacyUserController extends Controller
     }
 
     /**
-     * A method to return the dashboard
+     * This method is used to return the dashboard
      */
     function viewDashboard(){
 

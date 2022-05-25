@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     /**
-     * a method to save new user
+     * This method is used to save new user
      */
     function save(Request $request){
 
@@ -40,7 +40,8 @@ class UserController extends Controller
 
                 if($isSaved){
                     // return to dashboad
-                    return redirect('/userAuth/register')->with('feedbackMsg','user saved ! user ID: '.strval($newUser->id));
+                    $request->session()->put('loggedUser',$newUser->id);
+                    return redirect('/user/dashboard')->with('feedbackMsg','user saved !');
                 }
                 else{
                     return redirect('/userAuth/register')->with('feedbackMsg','Sorry! Try again.');
@@ -55,7 +56,7 @@ class UserController extends Controller
     }
 
     /**
-     * A method to validate a user
+     * This method is used to validate a user
      */
     function validateUser (Request $request){
         // get values
@@ -71,7 +72,7 @@ class UserController extends Controller
         else{
             // TODO: use hashing
             //strcmp($filteredUser->password,trim($userPassword))==0
-            if(Hash::check($filteredUser->password,$userPassword)){
+            if(Hash::check($userPassword,$filteredUser->password)){
                 $request->session()->forget('loggedUser');
                 $request->session()->put('loggedUser',$filteredUser->id);
                 Log::info("Requested user name : ".$filteredUser->name. "ID :".$filteredUser->id);
@@ -84,7 +85,7 @@ class UserController extends Controller
     }
 
     /**
-     * A method to return the dashboard
+     * This method is used to return user to dashboard
      */
     function viewUserDashboard(){
         $data = ['loggedUserData'=> User::findOrFail(session('loggedUser'))];

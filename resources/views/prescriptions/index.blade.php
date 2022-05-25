@@ -15,7 +15,11 @@
                     <td>{{$prescription->note}}</td>
                     <td>{{$prescription->deliveryAddress}}</td>
                     <td>{{$prescription->deliveryTime}}</td>
-                    <td><button class="action-btn-info"><a href="{{route('quotations.create',$prescription->id)}}">Create Quotation</a></button></td>
+                    @if(!$prescription->isQuotationCreated)
+                        <td><button class="action-btn-info"><a href="{{route('quotations.create',$prescription->id)}}">Create Quotation</a></button></td>
+                    @else
+                        <td><button disabled class="action-btn-info">Create Quotation</button></td>
+                    @endif
                 </tr>
             @endforeach
         </table>

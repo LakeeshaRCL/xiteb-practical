@@ -6,12 +6,16 @@ use Illuminate\Http\Request;
 
 class PharmacyUserAuthController extends Controller
 {
-    // A method to show login screen
+    /*
+     * This method is used show the login screen of the pharmacy users
+     */
     function login(){
         return view('auth.pharmacyUserLogin');
     }
 
-    // A method to logout the user
+    /*
+     * This method is used to logout a pharmacy user
+     */
    function logout(){
         if(session()->has('loggedPharmacyUserID')){
             session()->pull('loggedPharmacyUserID');

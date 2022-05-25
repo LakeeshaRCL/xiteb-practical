@@ -15,7 +15,7 @@ class QuotationController extends Controller
 {
 
     /*
-     * A method to return quotation details by user id
+     * This method is used to return quotation details by user id
      */
     function showQuotations($userID){
 
@@ -78,7 +78,7 @@ class QuotationController extends Controller
 
 
     /*
-     * a method to list all quotations
+     * This method is used to list all quotations
      */
     function getAll(){
 
@@ -129,7 +129,7 @@ class QuotationController extends Controller
     }
 
     /*
-     * A method to create new quotation
+     * This method is used to create new quotation
      */
     function create($presID){
 
@@ -155,7 +155,7 @@ class QuotationController extends Controller
 
 
     /**
-     * A method to save a new quotation
+     * This method is used to save a new quotation
      *
      */
     function save(Request $request){
@@ -165,6 +165,9 @@ class QuotationController extends Controller
         $prescriptionID = $request->prescriptionID;
 
         try{
+            // get the prescription to update the quotation creation
+            $prescription = Prescription::findOrFail($prescriptionID);
+
             // save new quotation
             $newQuotation = new Quotation();
 
@@ -172,6 +175,10 @@ class QuotationController extends Controller
             $newQuotation->prescriptionID=$prescriptionID;
 
             $newQuotation->save();
+
+            //update prescription
+            $prescription->isQuotationCreated = true;
+            $prescription->save();
 
             for ($index =0 ; $index<count($drugIDs); $index++){
                 Log::info("Record - Drug ID : ".$drugIDs[$index]." Qty : ".$quantities[$index]);
@@ -194,7 +201,7 @@ class QuotationController extends Controller
     }
 
     /**
-     * A method to update quotation feedback using quotation id
+     * This method is used to update quotation feedback using quotation id
      *
      */
     function updateFeedback($quoID,Request $request){
